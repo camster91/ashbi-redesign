@@ -1,1 +1,6 @@
-PLACEHOLDER_POSTCSS
+export default {
+  plugins: {
+    tailwindcss: {},
+    autoprefixer: {},
+  },
+};
