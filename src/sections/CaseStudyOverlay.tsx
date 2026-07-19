@@ -1,6 +1,6 @@
+import { useProjects } from "@/content/useContent";
 import { OverlayShell } from "@/components/OverlayShell";
 import { useOverlay } from "@/components/OverlayContext";
-import { PROJECTS, type Project } from "@/content/projects";
 
 type Props = {
   projectId: string | null;
@@ -10,104 +10,130 @@ type Props = {
 
 export function CaseStudyOverlay({ projectId, onClose, onNavigate }: Props) {
   const { openBooking } = useOverlay();
-  const project: Project | undefined = PROJECTS.find((p) => p.id === projectId);
-  const next: Project | undefined = project
-    ? PROJECTS[(PROJECTS.indexOf(project) + 1) % PROJECTS.length]
-    : undefined;
+  const PROJECTS = useProjects();
+  const p = projectId ? PROJECTS.find((x) => x.id === projectId) ?? null : null;
+  const next = p ? PROJECTS[(PROJECTS.findIndex((x) => x.id === p.id) + 1) % PROJECTS.length] : null;
 
   return (
-    <OverlayShell open={projectId !== null} onClose={onClose} mode="sheet" dark label="Case study">
-      {project && (
-        <div className="min-h-full">
+    <OverlayShell open={!!p} onClose={onClose} mode="sheet" label={p ? `${p.name} case study` : "Case study"}>
+      {p && (
+        <article>
           {/* Top bar */}
-          <div className="sticky top-0 z-10 flex items-center justify-between border-b border-[#f5f1e6]/10 bg-[#12291c]/90 px-6 py-5 backdrop-blur-md md:px-12">
-            <p className="font-mono-u text-[10px] text-[#f5f1e6]/60 md:text-[11px]">
-              Case study — {project.category}
+          <div className="sticky top-0 z-10 flex items-center justify-between border-b border-[#12291c]/15 bg-[#f5f1e6]/90 px-5 py-3 backdrop-blur-md md:px-10 md:py-4">
+            <p className="font-mono-u text-[10px] text-[#12291c]/70 md:text-[11px]">
+              Case study — {p.client}
             </p>
             <button
               onClick={onClose}
-              className="font-mono-u rounded-full border border-[#f5f1e6]/25 px-5 py-2 text-[11px] transition-colors hover:bg-[#f5f1e6] hover:text-[#12291c]"
+              className="font-mono-u rounded-full border border-[#12291c]/25 px-5 py-2 text-[11px] transition-colors hover:bg-[#12291c] hover:text-[#f5f1e6]"
             >
               Close ✕
             </button>
           </div>
 
-          <div className="px-6 py-12 md:px-12 md:py-16">
-            <h2 className="font-serif-d max-w-5xl text-6xl leading-[0.98] tracking-tight md:text-8xl">
-              {project.title}
-            </h2>
+          {/* Header */}
+          <header className="px-5 pb-10 pt-12 md:px-10 md:pt-20">
+            <p className="font-mono-u mb-4 text-[10px] text-[#ff4d00] md:text-[11px]">
+              {p.sector} — {p.year}
+            </p>
+            <h1 className="font-serif-d max-w-[14ch] text-[13vw] leading-[0.95] sm:text-[9vw] lg:text-[7vw]">
+              {p.name}
+            </h1>
+            <p className="font-mono-u mt-6 text-[10px] text-[#12291c]/70 md:text-[11px]">
+              {p.services.join(" · ")}
+            </p>
+          </header>
 
-            {/* Meta grid */}
-            <div className="font-mono-u mt-10 grid gap-6 border-t border-[#f5f1e6]/15 pt-8 text-[11px] sm:grid-cols-3">
-              <div>
-                <p className="text-[#ff4d00]">Client</p>
-                <p className="mt-2 text-[#f5f1e6]/80">{project.client}</p>
-              </div>
-              <div>
-                <p className="text-[#ff4d00]">Year</p>
-                <p className="mt-2 text-[#f5f1e6]/80">{project.year}</p>
-              </div>
-              <div>
-                <p className="text-[#ff4d00]">Scope</p>
-                <p className="mt-2 text-[#f5f1e6]/80">{project.scope.join(" · ")}</p>
-              </div>
+          {/* Hero image */}
+          <img
+            src={p.gallery[0]?.src ?? p.img}
+            alt={p.gallery[0]?.alt ?? p.alt}
+            className="aspect-[16/9] w-full object-cover md:aspect-[21/9]"
+          />
+
+          {/* Meta + overview */}
+          <div className="grid gap-10 px-5 py-14 md:grid-cols-12 md:px-10 md:py-24">
+            <div className="md:col-span-3">
+              <p className="font-mono-u mb-3 text-[10px] text-[#ff4d00] md:text-[11px]">Deliverables</p>
+              <ul className="space-y-2">
+                {p.deliverables.map((d) => (
+                  <li key={d} className="font-mono-u text-[10px] text-[#12291c]/70 md:text-[11px]">
+                    — {d}
+                  </li>
+                ))}
+              </ul>
             </div>
-
-            <img
-              src={project.img}
-              alt={project.title}
-              className="mt-12 aspect-[16/9] w-full rounded-2xl object-cover"
-            />
-
-            <div className="mt-14 grid gap-10 md:grid-cols-2">
-              <div>
-                <p className="font-mono-u text-[11px] text-[#ff4d00]">The brief</p>
-                <p className="mt-4 text-lg leading-relaxed text-[#f5f1e6]/85">{project.summary}</p>
-              </div>
-              <div>
-                <p className="font-mono-u text-[11px] text-[#ff4d00]">The outcome</p>
-                <p className="mt-4 text-lg leading-relaxed text-[#f5f1e6]/85">{project.outcome}</p>
-              </div>
+            <div className="md:col-span-6 md:col-start-5">
+              <p className="font-serif-d text-3xl leading-[1.15] md:text-[2.6rem] md:leading-[1.12]">
+                {p.overview}
+              </p>
+              <p className="mt-8 max-w-xl text-base leading-relaxed text-[#12291c]/75">
+                {p.approach}
+              </p>
             </div>
+          </div>
 
-            {/* Gallery */}
-            <div className="mt-14 grid gap-6 md:grid-cols-2">
-              {project.gallery.map((g, i) => (
+          {/* Outcomes band */}
+          <div className="grid bg-[#12291c] text-[#f5f1e6] sm:grid-cols-3">
+            {p.outcomes.map((o, i) => (
+              <div
+                key={o.label}
+                className={`border-[#f5f1e6]/15 px-6 py-10 md:px-10 ${i > 0 ? "border-t sm:border-l sm:border-t-0" : ""}`}
+              >
+                <p className="font-serif-d text-5xl leading-none">{o.value}</p>
+                <p className="font-mono-u mt-3 text-[10px] leading-relaxed text-[#f5f1e6]/65">
+                  {o.label}
+                </p>
+              </div>
+            ))}
+          </div>
+
+          {/* Gallery */}
+          {p.gallery.length > 1 && (
+            <div className="grid gap-px bg-[#12291c]/10 md:grid-cols-2">
+              {p.gallery.slice(1).map((g) => (
                 <img
-                  key={i}
-                  src={g}
-                  alt={`${project.title} — ${i + 1}`}
-                  className="aspect-[4/3] w-full rounded-xl object-cover"
+                  key={g.src}
+                  src={g.src}
+                  alt={g.alt}
                   loading="lazy"
+                  className={`w-full object-cover ${g.half ? "aspect-[4/3]" : "aspect-[4/3] md:col-span-2 md:aspect-[21/9]"}`}
                 />
               ))}
             </div>
+          )}
 
-            {/* Footer actions */}
-            <div className="mt-16 flex flex-col items-start justify-between gap-8 border-t border-[#f5f1e6]/15 pt-10 md:flex-row md:items-center">
-              <button
-                onClick={() => {
-                  onClose();
-                  openBooking();
-                }}
-                className="font-mono-u rounded-full bg-[#ff4d00] px-7 py-4 text-[11px] text-[#f5f1e6] transition-colors hover:bg-[#f5f1e6] hover:text-[#12291c]"
-              >
-                Start your project →
-              </button>
-              {next && (
-                <button
-                  onClick={() => onNavigate(next.id)}
-                  className="group text-left"
-                >
-                  <span className="font-mono-u text-[10px] text-[#f5f1e6]/50">Next project</span>
-                  <span className="font-serif-d mt-1 block text-4xl transition-colors group-hover:text-[#ff4d00] md:text-5xl">
-                    {next.title} →
-                  </span>
-                </button>
-              )}
-            </div>
+          {/* Next project */}
+          {next && (
+            <button
+              onClick={() => onNavigate(next.id)}
+              className="group block w-full border-t border-[#12291c]/15 px-5 py-14 text-left transition-colors hover:bg-[#12291c] hover:text-[#f5f1e6] md:px-10 md:py-20"
+            >
+              <p className="font-mono-u mb-4 text-[10px] text-[#ff4d00] md:text-[11px]">
+                Next case study
+              </p>
+              <p className="font-serif-d flex items-center justify-between gap-6 text-5xl leading-none md:text-8xl">
+                {next.name}
+                <span className="text-[#ff4d00] transition-transform duration-500 group-hover:translate-x-3">
+                  →
+                </span>
+              </p>
+            </button>
+          )}
+
+          {/* CTA */}
+          <div className="flex flex-col items-center gap-5 px-5 py-16 text-center md:py-24">
+            <p className="font-serif-d text-4xl md:text-6xl">
+              Want results like <em className="italic text-[#ff4d00]">this</em>?
+            </p>
+            <button
+              onClick={openBooking}
+              className="font-mono-u rounded-full bg-[#12291c] px-8 py-4 text-[11px] text-[#f5f1e6] transition-colors hover:bg-[#ff4d00]"
+            >
+              Book a free intro call
+            </button>
           </div>
-        </div>
+        </article>
       )}
     </OverlayShell>
   );

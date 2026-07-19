@@ -3,81 +3,97 @@ import { useOverlay } from "@/components/OverlayContext";
 
 const PLANS = [
   {
-    name: "Brand identity",
-    price: "from $2,500",
-    unit: "CAD · one-time",
-    features: ["Logo & identity system", "Typography & colour", "Mini brand guidelines", "Launch asset pack"],
-    featured: false,
+    name: "Free project",
+    price: "Free",
+    per: "try us out",
+    features: ["One small design or web task", "No commitment, just results", "Delivered in 1 week"],
   },
   {
-    name: "Packaging",
-    price: "from $4,000",
-    unit: "CAD · one-time",
-    features: ["Pack architecture & design", "Print-ready dielines", "Mockups & art direction", "Printer hand-off support"],
-    featured: true,
+    name: "Part-time creative support",
+    price: "$1,999",
+    per: "/ month · 40 hrs",
+    features: [
+      "40 hrs of design & development",
+      "Monthly strategy check-ins",
+      "Ideal for smaller, ongoing projects",
+    ],
   },
   {
-    name: "Subscription",
-    price: "$3,000",
-    unit: "CAD · per month",
-    features: ["Unlimited design & dev requests", "Senior-only, 2–4 day turnarounds", "Pause or cancel anytime", "Slack access to the studio"],
-    featured: false,
+    name: "Full-time creative partnership",
+    price: "$3,999",
+    per: "/ month · 80 hrs",
+    features: [
+      "80 hrs of design & development",
+      "Priority support, faster turnaround",
+      "Best for larger, ongoing projects",
+    ],
   },
 ];
 
 export function Pricing() {
   const { openBooking } = useOverlay();
-
   return (
-    <section id="pricing" className="bg-[#ece6d4] px-5 py-20 md:px-10 md:py-28">
-      <div className="mx-auto max-w-7xl">
+    <section
+      id="pricing"
+      className="scroll-mt-20 border-t border-[#12291c]/15 px-5 py-16 md:px-10 md:py-28"
+    >
+      <div className="mb-12 flex flex-wrap items-end justify-between gap-4">
         <Reveal>
-          <p className="font-mono-u text-[11px] text-[#12291c]/60">Pricing</p>
-          <h2 className="font-serif-d mt-6 max-w-3xl text-5xl leading-[1.02] tracking-tight md:text-6xl">
-            Straightforward <em className="italic text-[#ff4d00]">numbers</em>.
+          <h2 className="font-serif-d text-5xl leading-[0.95] md:text-7xl">
+            Plans for all <em className="italic text-[#ff4d00]">sizes</em>
           </h2>
-          <p className="mt-6 max-w-xl text-base leading-relaxed text-[#12291c]/75">
-            No hourly billing, no scope creep. Every engagement starts with a
-            free intro call and a fixed quote.
+        </Reveal>
+        <Reveal delay={120}>
+          <p className="font-mono-u max-w-xs text-[10px] leading-relaxed text-[#12291c]/70 md:text-[11px]">
+            Flexible, transparent pricing — scalable and affordable, with no surprises.
           </p>
         </Reveal>
+      </div>
 
-        <div className="mt-14 grid gap-6 lg:grid-cols-3">
-          {PLANS.map((p, i) => (
-            <Reveal key={p.name} delay={i * 110}>
-              <div
-                className={`flex h-full flex-col rounded-2xl p-8 md:p-10 ${
-                  p.featured
-                    ? "bg-[#12291c] text-[#f5f1e6]"
-                    : "border border-[#12291c]/15 bg-[#f5f1e6]"
-                }`}
-              >
-                <p className="font-mono-u text-[11px] opacity-70">{p.name}</p>
-                <p className="font-serif-d mt-6 text-4xl md:text-5xl">{p.price}</p>
-                <p className="font-mono-u mt-2 text-[10px] opacity-55">{p.unit}</p>
-                <ul className="mt-8 flex flex-1 flex-col gap-3">
-                  {p.features.map((f) => (
-                    <li key={f} className="flex items-start gap-3 text-sm leading-relaxed">
-                      <span className="text-[#ff4d00]">✓</span>
-                      {f}
-                    </li>
-                  ))}
-                </ul>
-                <button
-                  onClick={openBooking}
-                  className={`font-mono-u mt-10 rounded-full py-4 text-[11px] transition-colors ${
-                    p.featured
-                      ? "bg-[#ff4d00] text-[#f5f1e6] hover:bg-[#f5f1e6] hover:text-[#12291c]"
-                      : "bg-[#12291c] text-[#f5f1e6] hover:bg-[#ff4d00]"
-                  }`}
-                >
-                  Start with an intro call
+      <Reveal>
+        <ul className="border-t border-[#12291c]/20">
+          {PLANS.map((p) => (
+            <li
+              key={p.name}
+              className="grid gap-6 border-b border-[#12291c]/20 py-8 md:grid-cols-12 md:items-center md:py-10"
+            >
+              <h3 className="font-serif-d text-3xl leading-tight md:col-span-4 md:text-4xl">
+                {p.name}
+              </h3>
+              <ul className="space-y-2 md:col-span-5">
+                {p.features.map((f) => (
+                  <li key={f} className="font-mono-u text-[10px] text-[#12291c]/70 md:text-[11px]">
+                    — {f}
+                  </li>
+                ))}
+              </ul>
+              <div className="flex items-end justify-between gap-4 md:col-span-3 md:flex-col md:items-end md:gap-2">
+                <p className="font-serif-d text-4xl leading-none md:text-5xl">
+                  {p.price}
+                  <span className="font-mono-u ml-2 align-middle text-[10px] text-[#12291c]/60">
+                    {p.per}
+                  </span>
+                </p>
+                <button onClick={openBooking} className="link-underline font-mono-u text-[11px]">
+                  Get started ↗
                 </button>
               </div>
-            </Reveal>
+            </li>
           ))}
-        </div>
-      </div>
+        </ul>
+      </Reveal>
+
+      <Reveal delay={100}>
+        <p className="mt-8 max-w-2xl text-sm leading-relaxed text-[#12291c]/70">
+          Need it faster, or something more complex? We offer{" "}
+          <strong className="font-semibold text-[#12291c]">custom packages</strong> for
+          fast-track or intricate projects —{" "}
+          <a href="#contact" className="link-underline">
+            talk to us
+          </a>{" "}
+          for tailored pricing and timelines.
+        </p>
+      </Reveal>
     </section>
   );
 }

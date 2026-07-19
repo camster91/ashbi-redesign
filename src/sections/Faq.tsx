@@ -1,55 +1,81 @@
+import { useState } from "react";
 import { Reveal } from "@/components/Reveal";
 
 const FAQS = [
   {
-    q: "How long does a typical project take?",
-    a: "Brand identities run 3–4 weeks, packaging systems 4–6 weeks, and websites 4–8 weeks depending on scope. Subscription requests turn around in 2–4 business days each.",
+    q: "How long does the branding process take?",
+    a: "Typically 4 to 8 weeks, depending on scope and complexity. We always strive to accommodate your timeline and deliver high-quality work within the agreed deadline.",
   },
   {
-    q: "Do you work with early-stage startups?",
-    a: "Yes — most of our clients are founders launching their first retail product or DTC brand. The intro call is free precisely so we can scope something that fits your stage and budget.",
+    q: "What industries do you serve?",
+    a: "We specialize in CPG and DTC — food & beverage, beauty, wellness, retail — and also work with technology, healthcare, fashion and more. Whatever your industry, we tailor the work to resonate with your audience.",
   },
   {
-    q: "Who owns the work when it's done?",
-    a: "You do. Final deliverables, source files, and IP transfer to you on final payment. We only ask for the right to show the work in our portfolio.",
+    q: "Will I have input throughout the process?",
+    a: "Absolutely — collaboration is key. You'll get progress updates, drafts and revision rounds, plus weekly video updates through our client portal, so your vision is realized and expectations exceeded.",
   },
   {
-    q: "Can you handle printing and production?",
-    a: "We prepare print-ready files, manage dielines and colour, and liaise with your printer — or recommend ones we trust. We've shepherded dozens of packaging runs to shelf.",
-  },
-  {
-    q: "What does the subscription include?",
-    a: "Unlimited queued requests across brand, packaging, and web — one at a time, senior-only, delivered every 2–4 business days. Pause or cancel month to month.",
+    q: "What platforms do you build websites on?",
+    a: "Shopify and WordPress with fully custom themes, plus headless solutions when performance demands it. Every site is designed to convert, not just to look good.",
   },
 ];
 
 export function Faq() {
-  return (
-    <section id="faq" className="px-5 py-20 md:px-10 md:py-28">
-      <div className="mx-auto max-w-7xl">
-        <Reveal>
-          <p className="font-mono-u text-[11px] text-[#12291c]/60">FAQ</p>
-          <h2 className="font-serif-d mt-6 max-w-3xl text-5xl leading-[1.02] tracking-tight md:text-6xl">
-            Before you <em className="italic text-[#ff4d00]">ask</em>.
-          </h2>
-        </Reveal>
+  const [open, setOpen] = useState<number | null>(0);
 
-        <div className="mt-14 max-w-4xl">
-          {FAQS.map((f, i) => (
-            <Reveal key={f.q} delay={i * 60}>
-              <details className="group border-b border-[#12291c]/15 py-7">
-                <summary className="flex cursor-pointer list-none items-center justify-between gap-6 [&::-webkit-details-marker]:hidden">
-                  <span className="font-serif-d text-2xl leading-snug md:text-3xl">{f.q}</span>
-                  <span className="font-serif-d shrink-0 text-3xl text-[#ff4d00] transition-transform duration-300 group-open:rotate-45">
+  return (
+    <section
+      id="faq"
+      className="scroll-mt-20 grid gap-10 px-5 py-16 md:grid-cols-12 md:px-10 md:py-28"
+    >
+      <Reveal className="md:col-span-4">
+        <h2 className="font-serif-d text-5xl leading-[0.95] md:text-6xl">
+          Frequently asked{" "}
+          <em className="italic text-[#ff4d00]">questions</em>
+        </h2>
+        <p className="mt-6 text-base text-[#12291c]/70">
+          Can't find what you're looking for?{" "}
+          <a href="#contact" className="link-underline">
+            Get in touch
+          </a>
+          .
+        </p>
+      </Reveal>
+
+      <Reveal delay={120} className="md:col-span-8">
+        <ul className="border-t border-[#12291c]/20">
+          {FAQS.map((f, i) => {
+            const isOpen = open === i;
+            return (
+              <li key={f.q} className="border-b border-[#12291c]/20">
+                <button
+                  onClick={() => setOpen(isOpen ? null : i)}
+                  className="flex w-full items-center justify-between gap-6 py-6 text-left"
+                  aria-expanded={isOpen}
+                >
+                  <span className="font-serif-d text-2xl leading-tight md:text-3xl">{f.q}</span>
+                  <span
+                    className={`font-serif-d shrink-0 text-3xl text-[#ff4d00] transition-transform duration-500 ${
+                      isOpen ? "rotate-45" : ""
+                    }`}
+                  >
                     +
                   </span>
-                </summary>
-                <p className="mt-4 max-w-2xl text-base leading-relaxed text-[#12291c]/75">{f.a}</p>
-              </details>
-            </Reveal>
-          ))}
-        </div>
-      </div>
+                </button>
+                <div
+                  className={`grid transition-all duration-500 ease-out ${
+                    isOpen ? "grid-rows-[1fr] pb-6 opacity-100" : "grid-rows-[0fr] opacity-0"
+                  }`}
+                >
+                  <p className="max-w-2xl overflow-hidden text-base leading-relaxed text-[#12291c]/75">
+                    {f.a}
+                  </p>
+                </div>
+              </li>
+            );
+          })}
+        </ul>
+      </Reveal>
     </section>
   );
 }
