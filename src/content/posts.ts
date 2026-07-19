@@ -16,7 +16,7 @@ export const POSTS: Post[] = [
     category: "Web design",
     date: "2025",
     url: "https://www.ashbi.ca/10-principles-of-good-web-design/",
-    img: "/images/blog-web-design.webp",
+    img: "https://www.ashbi.ca/wp-content/uploads/2022/04/image.jpeg.webp",
     excerpt:
       "What separates a website that converts from one that just exists — ten principles we apply to every build.",
   },
