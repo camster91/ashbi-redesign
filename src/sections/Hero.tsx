@@ -1,77 +1,102 @@
-import { type CSSProperties } from "react";
-import { Parallax } from "@/components/Parallax";
+import type { CSSProperties } from "react";
 import { Reveal } from "@/components/Reveal";
+import { Parallax } from "@/components/Parallax";
 import { useOverlay } from "@/components/OverlayContext";
 
-function Words({ text, base = 0, className = "" }: { text: string; base?: number; className?: string }) {
-  return (
-    <span className={className}>
-      {text.split(" ").map((w, i) => (
-        <span key={i} className="hero-word">
-          <span style={{ "--d": `${base + i * 70}ms` } as CSSProperties}>{w}&nbsp;</span>
-        </span>
-      ))}
-    </span>
-  );
-}
+const HERO_IMG = "https://www.ashbi.ca/wp-content/uploads/2024/08/dispenser-bottle-mockup-04-1536x1024.png";
+
+type Seg = { text: string; em?: boolean };
+const HEADLINE: Seg[] = [
+  { text: "CPG" },
+  { text: "&" },
+  { text: "DTC" },
+  { text: "brands" },
+  { text: "that" },
+  { text: "dominate" },
+  { text: "the" },
+  { text: "shelf", em: true },
+  { text: "and" },
+  { text: "the" },
+  { text: "screen.", em: true },
+];
 
 export function Hero() {
   const { openBooking } = useOverlay();
 
   return (
-    <section id="top" className="relative overflow-hidden px-5 pt-36 pb-16 md:px-10 md:pt-44 md:pb-24">
-      <div className="mx-auto max-w-7xl">
-        <p className="font-mono-u text-[11px] text-[#12291c]/60">
-          <Words text="Branding & packaging studio — Toronto" base={100} />
-        </p>
+    <section id="top" className="pt-20 md:pt-24">
+      <div className="px-5 md:px-10">
+        {/* Kicker row */}
+        <Reveal>
+          <div className="font-mono-u flex flex-wrap items-center justify-between gap-3 border-b border-[#12291c]/15 pb-4 text-[10px] text-[#12291c]/70 md:text-[11px]">
+            <span>CPG &amp; DTC Branding Agency</span>
+            <span className="hidden md:inline">Packaging · Identity · Web</span>
+            <span className="flex items-center gap-2">
+              <span className="inline-block h-2 w-2 animate-pulse rounded-full bg-[#ff4d00]" />
+              Now booking — Q3 2026
+            </span>
+            <span>Toronto, Canada</span>
+          </div>
+        </Reveal>
 
-        <h1 className="font-serif-d mt-8 max-w-5xl text-[13.5vw] leading-[0.98] tracking-tight sm:text-7xl md:text-8xl lg:text-[7.5rem]">
-          <Words text="We build brands" base={250} />
-          <br />
-          <Words text="people pick" base={550} className="italic text-[#ff4d00]" />
-          <Words text="up." base={800} />
+        {/* Headline — word by word */}
+        <h1
+          className="font-serif-d mt-10 max-w-[16ch] text-[13.5vw] leading-[0.95] sm:text-[11vw] lg:text-[8.2vw]"
+          aria-label="CPG & DTC brands that dominate the shelf and the screen."
+        >
+          {HEADLINE.map((w, i) => (
+            <span key={i} className="hero-word" aria-hidden="true">
+              <span
+                style={{ "--d": `${120 + i * 65}ms` } as CSSProperties}
+                className={w.em ? "italic text-[#ff4d00]" : ""}
+              >
+                {w.text}
+              </span>
+              {i < HEADLINE.length - 1 ? " " : ""}
+            </span>
+          ))}
         </h1>
 
-        <div className="mt-10 flex flex-col gap-8 md:mt-14 md:flex-row md:items-end md:justify-between">
-          <Reveal delay={950} className="max-w-md">
-            <p className="text-base leading-relaxed text-[#12291c]/75 md:text-lg">
-              Ashbi is a branding and packaging studio for CPG and DTC founders.
-              Identity, packaging, and web — designed to move product, not just
-              win awards.
+        {/* Sub + CTA row */}
+        <Reveal delay={900}>
+          <div className="mt-10 flex flex-col justify-between gap-8 pb-14 md:flex-row md:items-end">
+            <p className="max-w-md text-base leading-relaxed text-[#12291c]/75 md:text-lg">
+              A full-service creative agency crafting unforgettable brand identities,
+              standout packaging and conversion-driven websites for physical products —
+              from unboxing to checkout.
             </p>
-            <div className="mt-8 flex flex-wrap items-center gap-4">
+            <div className="flex flex-wrap items-center gap-x-12 gap-y-5 md:shrink-0 md:pl-10">
               <button
                 onClick={openBooking}
-                className="font-mono-u rounded-full bg-[#12291c] px-7 py-4 text-[11px] text-[#f5f1e6] transition-colors hover:bg-[#ff4d00]"
+                className="font-mono-u whitespace-nowrap rounded-full bg-[#12291c] px-8 py-4 text-[11px] text-[#f5f1e6] transition-colors hover:bg-[#ff4d00]"
               >
                 Book a free intro call
               </button>
-              <a
-                href="#work"
-                className="link-underline font-mono-u px-1 py-4 text-[11px] text-[#12291c]"
-              >
-                See the work ↓
+              <a href="#work" className="link-underline font-mono-u whitespace-nowrap text-[11px]">
+                Selected work ↓
               </a>
             </div>
-          </Reveal>
+          </div>
+        </Reveal>
+      </div>
 
-          <Reveal delay={1100} className="font-mono-u text-[10px] leading-loose text-[#12291c]/55">
-            <p>Est. 2019 — 60+ brands launched</p>
-            <p>CPG · DTC · Beauty · Food & bev</p>
-          </Reveal>
-        </div>
-
-        <Reveal delay={400} mask className="mt-14 md:mt-20">
-          <Parallax speed={0.07}>
+      {/* Hero image — full bleed with mask reveal + parallax drift */}
+      <Reveal delay={500} mask>
+        <figure className="relative overflow-hidden">
+          <Parallax speed={-0.06} className="scale-[1.12]">
             <img
-              src="https://www.ashbi.ca/wp-content/uploads/2024/10/Smokey_Story-21.jpg"
-              alt="Ashbi studio packaging and campaign work"
-              className="h-[46vh] w-full rounded-2xl object-cover md:h-[64vh]"
+              src={HERO_IMG}
+              alt="Shongani Skin gentle exfoliating face cleanser packaging with white peonies"
+              className="aspect-[4/3] w-full object-cover sm:aspect-[16/9] lg:aspect-[21/9]"
               loading="eager"
             />
           </Parallax>
-        </Reveal>
-      </div>
+          <figcaption className="font-mono-u absolute inset-x-0 bottom-0 flex items-center justify-between bg-gradient-to-t from-[#12291c]/70 to-transparent px-5 pb-4 pt-16 text-[10px] text-[#f5f1e6] md:px-10 md:text-[11px]">
+            <span>Shongani Skin — Brand identity &amp; packaging</span>
+            <span className="hidden sm:inline">Latest from the studio ↓</span>
+          </figcaption>
+        </figure>
+      </Reveal>
     </section>
   );
 }
